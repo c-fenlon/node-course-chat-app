@@ -19,16 +19,15 @@ io.on('connection', (socket) => {
     console.log('Server says: client disconnected');
   });
 
-  socket.on('createMessage', (newMessage) => {
-    console.log('create message', newMessage);
+  socket.on('createMessage', (message) => { // emits to a single connection
+    console.log('create message', message);
+
+    io.emit('newMessage', { // emits a message to all connections on the site
+      from: message.from,
+      text: message.text,
+      createAt: new Date().getTime()
+    })
   });
-
-  socket.emit('newMessage', {
-    from: 'Caroline', 
-    text: 'hello',
-    createdAt: 123
-  })
-
 });
 
 server.listen(port, () => {
