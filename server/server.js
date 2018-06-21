@@ -19,14 +19,32 @@ io.on('connection', (socket) => {
     console.log('Server says: client disconnected');
   });
 
+  socket.emit('newMessage', {
+    from: 'admin',
+    text: 'Welcome to the chat app',
+    createdAt: new Date().getTime()
+  });
+
+  socket.broadcast.emit('newMessage', {
+    from: 'admin',
+    text: 'New user joined',
+    createdAt: new Date().getTime()
+  });
+
   socket.on('createMessage', (message) => { // emits to a single connection
     console.log('create message', message);
 
     io.emit('newMessage', { // emits a message to all connections on the site
       from: message.from,
       text: message.text,
-      createAt: new Date().getTime()
-    })
+      createdAt: new Date().getTime()
+    });
+
+    // socket.broadcast.emit('newMessage', { // emits a message to all OTHER connections on the site
+    //   from: message.from,
+    //   text: message.text,
+    //   createAt: new Date().getTime()
+    // });
   });
 });
 
